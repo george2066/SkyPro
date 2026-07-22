@@ -73,5 +73,5 @@ void main() {
 
     System.out.println("Маша теперь получает " + mashaNewSalary + " рублей. Годовой доход вырос на " + (incomeNewMasha - incomeOldMasha) + " рублей");
     System.out.println("Денис теперь получает " + denisNewSalary + " рублей. Годовой доход вырос на " + (incomeNewDenis - incomeOldDenis) + " рублей");
-    System.out.println("Кристина теперь получает " + chrisNewSalary + " рублей. Годовой доход вырос на " + (incomeNewChris - incomeOldChris) + " рублей");
+    System.out.println("Кристинатеперь получает " + chrisNewSalary + " рублей. Годовой доход вырос на " + (incomeNewChris - incomeOldChris) + " рублей");
 }
