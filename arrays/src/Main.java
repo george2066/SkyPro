@@ -18,15 +18,20 @@ void main() {
         System.out.print(integers[i] + ", ");
     }
     System.out.println();
+    String string = "";
     for (int i = 0; i < integers.length; i++) {
         if (integers[i] % 2 != 0) {
             integers[i] += 1;
-            System.out.print(integers[i] + " ");
+            string += integers[i] + ", ";
             continue;
         }
-        System.out.print(integers[i] + " ");
+        if (i == (integers.length - 1)) {
+            string += integers[i];
+            break;
+        }
+        string += integers[i] + ", ";
     }
-    System.out.println();
+    System.out.println(string);
     //int[] arr = new int[10];
     //Arrays.fill(arr, 1);
     // Первым параметром передаем имя массива
