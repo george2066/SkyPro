@@ -29,7 +29,7 @@ public class Book {
     public String toString() {
         return "Book{" +
                 "name='" + name + '\'' +
-                ", author=" + author +
+                ", author=" + author.toString() +
                 ", yearOfPublication=" + yearOfPublication +
                 '}';
     }
