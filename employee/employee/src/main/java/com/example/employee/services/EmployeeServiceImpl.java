@@ -5,33 +5,33 @@ import com.example.employee.exceptions.EmployeeAlreadyAddedException;
 import com.example.employee.exceptions.EmployeeNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final List<Employee> employees;
+    private final Map<String, Employee> employees;
 
-    public EmployeeServiceImpl(ArrayList<Employee> employees) {
+    public EmployeeServiceImpl(HashMap<String, Employee> employees) {
         this.employees = employees;
     }
 
     @Override
     public Employee addEmployee(String firstname, String lastName) {
         Employee employee = new Employee(firstname, lastName);
-        if (employees.contains(employee)) {
+        String fio = employee.getName() + " " + employee.getSurname();
+        if (employees.containsKey(fio)) {
             throw new EmployeeAlreadyAddedException("Such employee already exists");
         }
-        employees.add(employee);
+        employees.put(fio, employee);
         return employee;
     }
 
     @Override
     public Employee removeEmployee(String firstname, String lastName) {
         Employee employee = new Employee(firstname, lastName);
-        if (employees.contains(employee)) {
-            employees.remove(employee);
+        String fio = employee.getName() + " " + employee.getSurname();
+        if (employees.containsKey(fio)) {
+            employees.remove(fio);
             return employee;
         }
         throw new EmployeeNotFoundException("Employee not found");
@@ -40,14 +40,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee findEmployee(String firstname, String lastName) {
         Employee employee = new Employee(firstname, lastName);
-        if (employees.contains(employee)) {
+        String fio = employee.getName() + " " + employee.getSurname();
+        if (employees.containsKey(fio)) {
             return employee;
         }
         throw new EmployeeNotFoundException("Employee not found");
     }
 
     @Override
-    public List<Object> findAll() {
-        return Collections.unmodifiableList(employees);
+    public Map<String, Employee> findAll() {
+        return employees;
     }
 }
