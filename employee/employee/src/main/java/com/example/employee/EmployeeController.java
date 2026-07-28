@@ -1,10 +1,15 @@
 package com.example.employee;
 
+import com.example.employee.exceptions.DepartmentNotExistException;
+import com.example.employee.exceptions.EmployeeAddedException;
 import com.example.employee.services.EmployeeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,19 +29,38 @@ public class EmployeeController {
             @RequestParam("name") String name,
             @RequestParam("surname") String surname,
             @RequestParam("salary") Integer salary,
-            @RequestParam("department") Integer department
+            @RequestParam("department") Integer department,
+            @RequestParam("passport") String passport
     ) {
-        return employeeService.addEmployee(name, surname, salary, department);
+        try {
+            return employeeService.addEmployee(name, surname, salary, department, passport);
+        } catch (EmployeeAddedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Data is not valid: " + e.getMessage(), e
+            );
+        }
     }
+
     @GetMapping("/remove")
-    public Employee removeEmployee(@RequestParam("name") String name,
-                                   @RequestParam("surname") String surname) {
-        return employeeService.removeEmployee(name, surname);
+    public Employee removeEmployee(@RequestParam("passport") String passport) {
+        try {
+            return employeeService.removeEmployee(passport);
+        } catch (EmployeeAddedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Data is not valid: " + e.getMessage(), e
+            );
+        }
     }
+
     @GetMapping("/find")
-    public Employee findEmployee(@RequestParam ("name") String name,
-                                 @RequestParam ("surname") String surname) {
-        return employeeService.findEmployee(name, surname);
+    public Employee findEmployee(@RequestParam ("passport") String passport) {
+        try {
+            return employeeService.findEmployee(passport);
+        } catch (EmployeeAddedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Data is not valid: " + e.getMessage(), e
+            );
+        }
     }
 
     @GetMapping("/findAll")
@@ -48,21 +72,39 @@ public class EmployeeController {
     public Integer maxSalaryOfDepartment(
             @RequestParam("departmentId") Integer departmentId
     ) {
-        return employeeService.maxSalaryOfDepartment(departmentId);
+        try {
+            return employeeService.maxSalaryOfDepartment(departmentId);
+        } catch (DepartmentNotExistException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Data is not valid: " + e.getMessage(), e
+            );
+        }
     }
 
     @GetMapping("/departments/min-salary")
     public Integer minSalaryOfDepartment(
             @RequestParam("departmentId") Integer departmentId
     ) {
-        return employeeService.minSalaryOfDepartment(departmentId);
+        try {
+            return employeeService.minSalaryOfDepartment(departmentId);
+        } catch (DepartmentNotExistException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Data is not valid: " + e.getMessage(), e
+            );
+        }
     }
 
     @GetMapping("/departments/employees")
     public List<Employee> employeesDepartment(
             @RequestParam("departmentId") Integer departmentId
     ) {
-        return employeeService.employeesDepartment(departmentId);
+        try {
+            return employeeService.employeesDepartment(departmentId);
+        } catch (EmployeeAddedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Data is not valid: " + e.getMessage(), e
+            );
+        }
     }
 
     @GetMapping("/departments/employeesSortedOnDepartmwnts")
