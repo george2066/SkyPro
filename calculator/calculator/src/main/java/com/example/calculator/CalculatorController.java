@@ -1,9 +1,11 @@
 package com.example.calculator;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class CalculatorController {
@@ -35,9 +37,12 @@ public class CalculatorController {
 
     @GetMapping(path = "/divide")
     public String divide(@RequestParam("num1") Integer num1, @RequestParam("num2") Integer num2) {
-        if (num2 == 0) {
-            throw new ArithmeticException("На ноль делить нельзя!");
+        try {
+            return service.divide(num1, num2);
+        } catch (ArithmeticException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "/ by zero: " + e.getMessage(), e
+            );
         }
-        return service.divide(num1, num2);
     }
 }
