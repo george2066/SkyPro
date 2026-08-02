@@ -47,7 +47,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Integer sumSalaryDepartment(Integer departmentId) {
         Department department = new Department(departmentId);
         if (!departments.contains(department)) {
-            throw new DepartmentNotExistException("Отдела не существует");
+            throw new DepartmentNotExistException(ConstantException.DEPARTMENT_NOT_FOUND);
         }
         List<Employee> employees = employeesDepartment(departmentId);
         return employees.stream().mapToInt(Employee::getSalary).sum();
@@ -57,7 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Integer maxSalaryDepartment(Integer departmentId) {
         Department department = new Department(departmentId);
         if (!departments.contains(department)) {
-            throw new DepartmentNotExistException("Отдела не существует");
+            throw new DepartmentNotExistException(ConstantException.DEPARTMENT_NOT_FOUND);
         }
         List<Employee> employees = employeesDepartment(departmentId);
         return employees.stream().filter(e -> Objects.equals(e.getDepartment(), department)).map(
@@ -68,7 +68,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Integer minSalaryDepartment(Integer departmentId) {
         if (!departments.contains(departmentId)) {
-            throw new DepartmentNotExistException("Отдела не существует");
+            throw new DepartmentNotExistException(ConstantException.DEPARTMENT_NOT_FOUND);
         }
         List<Employee> employees = employeesDepartment(departmentId);
         return employees.stream().filter(e -> Objects.equals(e.getDepartment(), departmentId)).map(
