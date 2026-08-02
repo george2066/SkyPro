@@ -67,7 +67,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Integer minSalaryDepartment(Integer departmentId) {
-        if (!departments.contains(departmentId)) {
+        Department department = new Department(departmentId);
+        if (!departments.contains(department)) {
             throw new DepartmentNotExistException(ConstantException.DEPARTMENT_NOT_FOUND);
         }
         List<Employee> employees = employeesDepartment(departmentId);
