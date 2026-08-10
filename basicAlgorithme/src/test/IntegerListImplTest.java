@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 class IntegerListImplTest {
@@ -34,7 +35,7 @@ class IntegerListImplTest {
     @Test
     void add() {
         integersIntegersList.add(6);
-        Assertions.assertEquals(6, integersIntegersList.size());
+        Assertions.assertEquals(7, integersIntegersList.size());
     }
 
     @Test
@@ -53,7 +54,8 @@ class IntegerListImplTest {
 
     @Test
     void removeItem() {
-        integersArrayList.removeIf(n -> (n == 1));
+        int index = integersArrayList.indexOf(1);
+        integersArrayList.remove(index);
         integersIntegersList.removeItem(1);
         Assertions.assertEquals(integersArrayList, integersIntegersList.toArray());
     }
@@ -128,5 +130,12 @@ class IntegerListImplTest {
             list[i] = integersArrayList.get(i);
         }
         Assertions.assertEquals(Arrays.toString(list), Arrays.toString(integersIntegersList.toArray().toArray()));
+    }
+
+    @Test
+    void sort() {
+        integersArrayList.sort(Comparator.reverseOrder());
+        integersIntegersList.sort();
+        Assertions.assertEquals(integersArrayList.reversed(), integersIntegersList.toArray());
     }
 }

@@ -137,4 +137,21 @@ public class IntegerListImpl implements IntegerList {
     public Object getList() {
         return this.integers;
     }
+
+    @Override
+    public void sort() {
+        int max = Integer.MIN_VALUE;
+        Integer[] arr = this.integers;
+        Integer[] newIntegerList = new Integer[size()];
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+        this.integers = arr;
+    }
 }

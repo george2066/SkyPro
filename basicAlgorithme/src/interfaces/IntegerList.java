@@ -80,4 +80,6 @@ public interface IntegerList {
     List<Integer> toArray();
 
     Object getList();
+
+    void sort();
 }
