@@ -3,51 +3,57 @@ package ru.hogwards.school.school.services;
 import org.springframework.stereotype.Service;
 import ru.hogwards.school.school.exceptions.NotFoundFacultyException;
 import ru.hogwards.school.school.interfaces.FacultyService;
+import ru.hogwards.school.school.interfaces.HogwardsConstantException;
 import ru.hogwards.school.school.models.Faculty;
+import ru.hogwards.school.school.repositories.FacultyRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
-    private final Map<Long, Faculty> faculties = new HashMap<>();
-    private long lastId = 0;
+    private final FacultyRepository repository;
+
+    public FacultyServiceImpl(FacultyRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Faculty add(Faculty faculty) {
-        faculty.setId(++lastId);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return repository.save(faculty);
     }
 
     @Override
     public Faculty get(long id) {
-        if (!faculties.containsKey(id)) {
-            throw new NotFoundFacultyException("Not found faculty");
+        Optional<Faculty> faculty = repository.findById(id);
+        if (faculty.isEmpty()) {
+            throw new NotFoundFacultyException(HogwardsConstantException.NOT_FOUND_FACULTY);
         }
-        return faculties.get(id);
+        return faculty.get();
     }
 
     @Override
     public Collection<Faculty> getAll() {
-        return faculties.values();
+        return repository.findAll();
     }
 
     @Override
     public Faculty change(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            throw new NotFoundFacultyException("Not found faculty");
+        if (!repository.existsById(faculty.getId())) {
+            throw new NotFoundFacultyException(HogwardsConstantException.NOT_FOUND_FACULTY);
         }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return add(faculty);
     }
 
     @Override
     public Faculty delete(long id) {
-        if (!faculties.containsKey(id)) {
-            throw new NotFoundFacultyException("Not found student");
+        if (!repository.existsById(id)) {
+            throw new NotFoundFacultyException(HogwardsConstantException.NOT_FOUND_FACULTY);
         }
-        return faculties.remove(id);
+        Faculty faculty = get(id);
+        repository.deleteById(id);
+        return faculty;
     }
 }

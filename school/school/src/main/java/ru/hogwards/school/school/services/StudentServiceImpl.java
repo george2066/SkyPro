@@ -2,52 +2,58 @@ package ru.hogwards.school.school.services;
 
 import org.springframework.stereotype.Service;
 import ru.hogwards.school.school.exceptions.NotFoundStudentException;
+import ru.hogwards.school.school.interfaces.HogwardsConstantException;
 import ru.hogwards.school.school.interfaces.StudentService;
 import ru.hogwards.school.school.models.Student;
+import ru.hogwards.school.school.repositories.StudentRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private final Map<Long, Student> students = new HashMap<>();
-    private long lastId = 0;
+    private final StudentRepository repository;
+
+    public StudentServiceImpl(StudentRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Student add(Student student) {
-        student.setId(++lastId);
-        students.put(student.getId(), student);
-        return student;
+        return repository.save(student);
     }
 
     @Override
     public Student get(long id) {
-        if (!students.containsKey(id)) {
-            throw new NotFoundStudentException("Not found student");
+        Optional<Student> student = repository.findById(id);
+        if (student.isEmpty()) {
+            throw new NotFoundStudentException(HogwardsConstantException.NOT_FOUND_STUDENT);
         }
-        return students.get(id);
+        return student.get();
     }
 
     @Override
     public Collection<Student> getAll() {
-        return students.values();
+        return repository.findAll();
     }
 
     @Override
     public Student change(Student student) {
-        if (!students.containsKey(student.getId())) {
-            throw new NotFoundStudentException("Not found student");
+        if (!repository.existsById(student.getId())) {
+            throw new NotFoundStudentException(HogwardsConstantException.NOT_FOUND_STUDENT);
         }
-        students.put(student.getId(), student);
-        return student;
+        return add(student);
     }
 
     @Override
-    public Student delete(long id) {
-        if (!students.containsKey(id)) {
-            throw new NotFoundStudentException("Not found student");
+    public Student delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new NotFoundStudentException(HogwardsConstantException.NOT_FOUND_STUDENT);
         }
-        return students.remove(id);
+        Student student = get(id);
+        repository.deleteById(id);
+        return student;
     }
 }

@@ -1,0 +1,6 @@
+Статьи
+Почитайте альтернативное описание Spring Data JPA:
+habr.com/ru/articles/435114
+
+Рекомендуем изучить материал о различных типах проекций, используемых в Spring Data JPA.
+habr.com/ru/companies/otus/articles/722060

@@ -9,5 +9,5 @@ public interface StudentService {
     Student get(long id);
     Collection<Student> getAll();
     Student change(Student student);
-    Student delete(long id);
+    Student delete(Long id);
 }
