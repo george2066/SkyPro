@@ -1,5 +1,5 @@
 ВАЖНО!!!!!!!!!
 
 Обратите внимание на файл application.properties.
-Вместе spring.jpa.hibernate.ddl написано spring.jpa.hibernate.ddl-auto.
+Вместо spring.jpa.hibernate.ddl пишите spring.jpa.hibernate.ddl-auto.
 Не делайте это по конспекту!

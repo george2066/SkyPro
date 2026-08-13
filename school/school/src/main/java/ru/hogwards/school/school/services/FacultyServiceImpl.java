@@ -1,16 +1,18 @@
 package ru.hogwards.school.school.services;
 
 import org.springframework.stereotype.Service;
+import ru.hogwards.school.school.exceptions.BadRequestNullFieldsException;
 import ru.hogwards.school.school.exceptions.NotFoundFacultyException;
 import ru.hogwards.school.school.interfaces.FacultyService;
-import ru.hogwards.school.school.interfaces.HogwardsConstantException;
+import ru.hogwards.school.school.exceptions.HogwardsConstantException;
 import ru.hogwards.school.school.models.Faculty;
+import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.FacultyRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -55,5 +57,28 @@ public class FacultyServiceImpl implements FacultyService {
         Faculty faculty = get(id);
         repository.deleteById(id);
         return faculty;
+    }
+
+    @Override
+    public Faculty getByColorOrName(String color, String name) {
+        if (color == null && name == null) {
+            throw new BadRequestNullFieldsException(HogwardsConstantException.NULL_FIELDS);
+        }
+        Faculty faculty = null;
+        if (name != null) {
+            faculty = repository.findByNameIgnoreCase(name);
+        } else {
+            faculty = repository.findByColorIgnoreCase(color);
+        }
+        return faculty;
+    }
+
+    @Override
+    public Set<Long> getStudents(Long id) {
+        if (!repository.existsById(id)) {
+            throw new NotFoundFacultyException(HogwardsConstantException.NOT_FOUND_FACULTY);
+        }
+        Faculty faculty = get(id);
+        return faculty.getStudents();
     }
 }

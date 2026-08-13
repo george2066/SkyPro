@@ -4,4 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.hogwards.school.school.models.Faculty;
 
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
+    Faculty findByColorIgnoreCase(String color);
+
+    Faculty findByNameIgnoreCase(String name);
 }

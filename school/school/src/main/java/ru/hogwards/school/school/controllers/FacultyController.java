@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwards.school.school.exceptions.NotFoundStudentException;
 import ru.hogwards.school.school.interfaces.FacultyService;
 import ru.hogwards.school.school.models.Faculty;
+import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.services.FacultyServiceImpl;
 
 import java.util.Collection;
+import java.util.Set;
 
 @RestController
 @RequestMapping("faculty")
@@ -51,6 +53,23 @@ public class FacultyController {
     public ResponseEntity<Faculty> delete(@PathVariable long id) {
         try {
             return ResponseEntity.ok(service.delete(id));
+        } catch (NotFoundStudentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("getByColorOrName")
+    public ResponseEntity<Faculty> getByColorOrName(
+            @RequestParam(value = "color", required = false) String color,
+            @RequestParam(value = "name", required = false) String name
+    ) {
+        return ResponseEntity.ok(service.getByColorOrName(color, name));
+    }
+
+    @GetMapping("getStudents/{id}")
+    public ResponseEntity<Set<Long>> getStudents(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(service.getStudents(id));
         } catch (NotFoundStudentException e) {
             return ResponseEntity.notFound().build();
         }

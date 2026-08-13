@@ -2,14 +2,14 @@ package ru.hogwards.school.school.services;
 
 import org.springframework.stereotype.Service;
 import ru.hogwards.school.school.exceptions.NotFoundStudentException;
-import ru.hogwards.school.school.interfaces.HogwardsConstantException;
+import ru.hogwards.school.school.exceptions.HogwardsConstantException;
 import ru.hogwards.school.school.interfaces.StudentService;
+import ru.hogwards.school.school.models.Faculty;
 import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.StudentRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,5 +55,19 @@ public class StudentServiceImpl implements StudentService {
         Student student = get(id);
         repository.deleteById(id);
         return student;
+    }
+
+    @Override
+    public Collection<Student> getAllByAgeBetween(Integer min, Integer max) {
+        return repository.findByAgeBetween(min, max);
+    }
+
+    @Override
+    public Faculty getFaculty(Long id) {
+        if (!repository.existsById(id)) {
+            throw new NotFoundStudentException(HogwardsConstantException.NOT_FOUND_STUDENT);
+        }
+        Student student = get(id);
+        return student.getFaculty();
     }
 }
