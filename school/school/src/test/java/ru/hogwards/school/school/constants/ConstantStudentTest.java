@@ -26,8 +26,6 @@ public class ConstantStudentTest {
 
     public static String COLOR = "color";
 
-    public static Faculty FACULTY = new Faculty();
-
     public static Student    STUDENT_1 = new Student();
     public static Student    STUDENT_2 = new Student();
     public static Student    STUDENT_3 = new Student();

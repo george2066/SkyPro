@@ -15,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import ru.hogwards.school.school.constants.ConstantFacultyTest;
 import ru.hogwards.school.school.constants.ConstantStudentTest;
 import ru.hogwards.school.school.models.Faculty;
 import ru.hogwards.school.school.models.Student;
@@ -66,7 +67,6 @@ public class StudentControllerTest {
         ConstantStudentTest.STUDENT_4.setName(ConstantStudentTest.NAME_4);
         ConstantStudentTest.STUDENT_4.setAge(ConstantStudentTest.AGE_4);
         ConstantStudentTest.STUDENT_4.setId(ConstantStudentTest.ID_4);
-
 
         when(repository.save(any(Student.class))).thenReturn(ConstantStudentTest.STUDENT_1);
         when(repository.findById(any(Long.class))).thenReturn(Optional.ofNullable(ConstantStudentTest.STUDENT_1));
@@ -158,7 +158,7 @@ public class StudentControllerTest {
     @Test
     void getFacultyTest() throws Exception {
         when(repository.findById(ConstantStudentTest.ID_1)).thenReturn(Optional.ofNullable(ConstantStudentTest.STUDENT_1));
-        ConstantStudentTest.STUDENT_1.setFaculty(ConstantStudentTest.FACULTY);
+        ConstantStudentTest.STUDENT_1.setFaculty(ConstantFacultyTest.FACULTY_1);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/students/" + ConstantStudentTest.ID_1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -166,6 +166,6 @@ public class StudentControllerTest {
                 .content(objectMapper.writeValueAsString(ConstantStudentTest.STUDENT_1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.faculty").value(ConstantStudentTest.FACULTY));
+                .andExpect(jsonPath("$.faculty").value(ConstantFacultyTest.FACULTY_1));
     }
 }

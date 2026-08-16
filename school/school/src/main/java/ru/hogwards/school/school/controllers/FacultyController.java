@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @RestController
-@RequestMapping("faculty")
+@RequestMapping("faculties")
 public class FacultyController {
     private final FacultyService service;
 
@@ -40,7 +40,7 @@ public class FacultyController {
         return ResponseEntity.ok(service.add(faculty));
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     public ResponseEntity<Faculty> change(@RequestBody Faculty faculty) {
         try {
             return ResponseEntity.ok(service.change(faculty));

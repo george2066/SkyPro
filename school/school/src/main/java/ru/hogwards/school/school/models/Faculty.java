@@ -6,9 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -69,6 +67,10 @@ public class Faculty {
     }
 
     public Set<Long> getStudents() {
-        return students.stream().map(Student::getId).collect(Collectors.toSet());
+        return Optional.ofNullable(students)
+                .map(list -> list.stream()
+                        .map(Student::getId)
+                        .collect(Collectors.toSet()))
+                .orElseGet(Collections::emptySet);
     }
 }
