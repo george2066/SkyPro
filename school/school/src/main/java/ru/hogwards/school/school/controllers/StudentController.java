@@ -38,7 +38,7 @@ public class StudentController {
         return ResponseEntity.ok(service.add(student));
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     public ResponseEntity<Student> change(@RequestBody Student student) {
         try {
             return ResponseEntity.ok(service.change(student));
