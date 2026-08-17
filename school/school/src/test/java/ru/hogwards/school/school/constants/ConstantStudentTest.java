@@ -8,20 +8,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConstantStudentTest {
+    public static Long NOT_EXIST_ID = 5L;
     public static Long       ID_1 = 1L;
-    public static String     NAME_1 = "name1";
-    public static Integer    AGE_1 = 21;
-
     public static Long       ID_2 = 2L;
-    public static String     NAME_2 = "name2";
-    public static Integer    AGE_2 = 22;
-
     public static Long       ID_3 = 3L;
-    public static String     NAME_3 = "name3";
-    public static Integer    AGE_3 = 33;
-
     public static Long       ID_4 = 4L;
+
+    public static String     NAME_1 = "name1";
+    public static String     NAME_2 = "name2";
+    public static String     NAME_3 = "name3";
     public static String     NAME_4 = "name4";
+
+    public static Integer    AGE_1 = 21;
+    public static Integer    AGE_2 = 22;
+    public static Integer    AGE_3 = 33;
     public static Integer    AGE_4 = 44;
 
     public static String COLOR = "color";

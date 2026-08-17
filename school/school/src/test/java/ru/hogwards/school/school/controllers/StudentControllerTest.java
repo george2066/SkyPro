@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.hogwards.school.school.constants.ConstantFacultyTest;
 import ru.hogwards.school.school.constants.ConstantStudentTest;
+import ru.hogwards.school.school.exceptions.HogwardsConstantException;
+import ru.hogwards.school.school.exceptions.NotFoundStudentException;
 import ru.hogwards.school.school.models.Faculty;
 import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.StudentRepository;
@@ -100,6 +102,15 @@ public class StudentControllerTest {
     }
 
     @Test
+    void getByIdNegativeTest() throws  Exception {
+        when(repository.findById(ConstantStudentTest.NOT_EXIST_ID)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/" + ConstantStudentTest.NOT_EXIST_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void getByAgeBetweenTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(
                                 "/students/getByAgeBetween?min={min}&max={max}",
@@ -128,6 +139,15 @@ public class StudentControllerTest {
     }
 
     @Test
+    void deleteNegativeTest() throws  Exception {
+        when(repository.findById(ConstantStudentTest.NOT_EXIST_ID)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/students/" + ConstantStudentTest.NOT_EXIST_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void getAllTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/students")
                         .accept(MediaType.APPLICATION_JSON))
@@ -143,29 +163,58 @@ public class StudentControllerTest {
     @Test
     void editTest() throws Exception {
         Integer newAge = 45;
-        Student student = ConstantStudentTest.STUDENT_1;
-        student.setAge(newAge);
+        Student studentUpdate = ConstantStudentTest.STUDENT_1;
+        studentUpdate.setAge(newAge);
+        when(repository.save(any(Student.class))).thenReturn(studentUpdate);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/students/{id}", student.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(student)))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/students")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(studentUpdate)))
+                .andDo(MockMvcResultHandlers.print()) // Выведет тело запроса и ответа в консоль для отладки
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.age").value(newAge));
     }
 
+    @Test
+    void editNegativeTest() throws Exception {
+        Integer newAge = 45;
+        Student studentUpdate = ConstantStudentTest.STUDENT_1;
+        studentUpdate.setAge(newAge);
+
+        doThrow(new NotFoundStudentException(HogwardsConstantException.NOT_FOUND_STUDENT))
+                .when(service).change(any(Student.class));
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/students")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(studentUpdate)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
     @Test
     void getFacultyTest() throws Exception {
         when(repository.findById(ConstantStudentTest.ID_1)).thenReturn(Optional.ofNullable(ConstantStudentTest.STUDENT_1));
         ConstantStudentTest.STUDENT_1.setFaculty(ConstantFacultyTest.FACULTY_1);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/students/" + ConstantStudentTest.ID_1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(ConstantStudentTest.STUDENT_1)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(ConstantStudentTest.STUDENT_1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.faculty").value(ConstantFacultyTest.FACULTY_1));
+    }
+
+    @Test
+    void getFacultyNegativeTest() throws Exception {
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/" + ConstantStudentTest.ID_1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 }
