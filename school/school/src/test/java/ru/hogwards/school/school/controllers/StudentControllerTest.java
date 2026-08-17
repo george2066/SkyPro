@@ -194,6 +194,7 @@ public class StudentControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound());
     }
+
     @Test
     void getFacultyTest() throws Exception {
         when(repository.findById(ConstantStudentTest.ID_1)).thenReturn(Optional.ofNullable(ConstantStudentTest.STUDENT_1));

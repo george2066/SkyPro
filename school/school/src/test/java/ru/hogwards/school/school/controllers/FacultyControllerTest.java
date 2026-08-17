@@ -16,7 +16,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.hogwards.school.school.constants.ConstantFacultyTest;
 import ru.hogwards.school.school.constants.ConstantStudentTest;
+import ru.hogwards.school.school.exceptions.BadRequestNullFieldsException;
+import ru.hogwards.school.school.exceptions.HogwardsConstantException;
+import ru.hogwards.school.school.exceptions.NotFoundFacultyException;
+import ru.hogwards.school.school.exceptions.NotFoundStudentException;
 import ru.hogwards.school.school.models.Faculty;
+import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.FacultyRepository;
 import ru.hogwards.school.school.services.FacultyServiceImpl;
 
@@ -99,6 +104,15 @@ public class FacultyControllerTest {
     }
 
     @Test
+    void getByIdNegativeTest() throws  Exception {
+        when(repository.findById(ConstantFacultyTest.NOT_EXIST_ID)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculties/" + ConstantFacultyTest.NOT_EXIST_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void deleteTest() throws Exception {
         when(repository.existsById(ConstantFacultyTest.ID_1)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.delete("/faculties/{id}", ConstantFacultyTest.ID_1))
@@ -106,6 +120,15 @@ public class FacultyControllerTest {
                 .andExpect(jsonPath("$.id").value(ConstantFacultyTest.ID_1))
                 .andDo(MockMvcResultHandlers.print());
         verify(repository, times(1)).deleteById(ConstantFacultyTest.ID_1);
+    }
+
+    @Test
+    void deleteNegativeTest() throws  Exception {
+        when(repository.findById(ConstantFacultyTest.NOT_EXIST_ID)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/faculties/" + ConstantFacultyTest.NOT_EXIST_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -127,13 +150,31 @@ public class FacultyControllerTest {
         Faculty faculty = ConstantFacultyTest.FACULTY_1;
         faculty.setColor(newColor);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/faculties/{id}", faculty.getId())
+        mockMvc.perform(MockMvcRequestBuilders.put("/faculties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(faculty)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.color").value(newColor));
+    }
+
+    @Test
+    void editNegativeTest() throws Exception {
+        String newColor = "new_color";
+        Faculty faculty = ConstantFacultyTest.FACULTY_1;
+        faculty.setColor(newColor);
+
+        doThrow(new NotFoundFacultyException(HogwardsConstantException.NOT_FOUND_FACULTY))
+                .when(service).change(any(Faculty.class));
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/faculties")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(faculty)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -150,7 +191,7 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void getByName() throws Exception {
+    void getByNameTest() throws Exception {
         when(service.getByColorOrName(null, ConstantFacultyTest.NAME_1)).thenReturn(ConstantFacultyTest.FACULTY_1);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/faculties/getByColorOrName")
@@ -159,6 +200,16 @@ public class FacultyControllerTest {
                 .andExpect(status().isOk());
 
         verify(service, times(1)).getByColorOrName(null, ConstantFacultyTest.NAME_1);
+    }
+
+    @Test
+    void getByNameNegativeTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculties/getByColorOrName")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        verify(service, never()).getByColorOrName(any(), anyString());
     }
 
     @Test

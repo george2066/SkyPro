@@ -2,6 +2,8 @@ package ru.hogwards.school.school.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwards.school.school.exceptions.BadRequestNullFieldsException;
+import ru.hogwards.school.school.exceptions.NotFoundFacultyException;
 import ru.hogwards.school.school.exceptions.NotFoundStudentException;
 import ru.hogwards.school.school.interfaces.FacultyService;
 import ru.hogwards.school.school.models.Faculty;
@@ -30,7 +32,7 @@ public class FacultyController {
     public ResponseEntity<Faculty> get(@PathVariable long id) {
         try {
             return ResponseEntity.ok(service.get(id));
-        } catch (NotFoundStudentException e) {
+        } catch (NotFoundFacultyException e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -40,11 +42,11 @@ public class FacultyController {
         return ResponseEntity.ok(service.add(faculty));
     }
 
-    @PutMapping("{id}")
+    @PutMapping
     public ResponseEntity<Faculty> change(@RequestBody Faculty faculty) {
         try {
             return ResponseEntity.ok(service.change(faculty));
-        } catch (NotFoundStudentException e) {
+        } catch (NotFoundFacultyException e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -53,7 +55,7 @@ public class FacultyController {
     public ResponseEntity<Faculty> delete(@PathVariable long id) {
         try {
             return ResponseEntity.ok(service.delete(id));
-        } catch (NotFoundStudentException e) {
+        } catch (NotFoundFacultyException e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -63,7 +65,11 @@ public class FacultyController {
             @RequestParam(value = "color", required = false) String color,
             @RequestParam(value = "name", required = false) String name
     ) {
-        return ResponseEntity.ok(service.getByColorOrName(color, name));
+        try {
+            return ResponseEntity.ok(service.getByColorOrName(color, name));
+        } catch (BadRequestNullFieldsException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("getStudents/{id}")

@@ -9,6 +9,7 @@ import java.util.*;
 public class ConstantFacultyTest {
     public static JSONObject OBJECT = new JSONObject();
 
+    public static Long NOT_EXIST_ID = 99L;
     public static Long ID_1 = 1L;
     public static Long ID_2 = 2L;
     public static Long ID_3 = 3L;

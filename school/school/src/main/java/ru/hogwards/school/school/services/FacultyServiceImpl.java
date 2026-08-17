@@ -64,7 +64,7 @@ public class FacultyServiceImpl implements FacultyService {
         if (color == null && name == null) {
             throw new BadRequestNullFieldsException(HogwardsConstantException.NULL_FIELDS);
         }
-        Faculty faculty = null;
+        Faculty faculty;
         if (name != null) {
             faculty = repository.findByNameIgnoreCase(name);
         } else {
