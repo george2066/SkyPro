@@ -13,16 +13,22 @@ public class ConstantStudentTest {
     public static Long       ID_2 = 2L;
     public static Long       ID_3 = 3L;
     public static Long       ID_4 = 4L;
+    public static Long       ID_5 = 5L;
+    public static Long       ID_6 = 6L;
 
     public static String     NAME_1 = "name1";
     public static String     NAME_2 = "name2";
     public static String     NAME_3 = "name3";
     public static String     NAME_4 = "name4";
+    public static String     NAME_5 = "name5";
+    public static String     NAME_6 = "name6";
 
     public static Integer    AGE_1 = 21;
     public static Integer    AGE_2 = 22;
     public static Integer    AGE_3 = 33;
     public static Integer    AGE_4 = 44;
+    public static Integer    AGE_5 = 55;
+    public static Integer    AGE_6 = 66;
 
     public static String COLOR = "color";
 
@@ -30,6 +36,8 @@ public class ConstantStudentTest {
     public static Student    STUDENT_2 = new Student();
     public static Student    STUDENT_3 = new Student();
     public static Student    STUDENT_4 = new Student();
+    public static Student    STUDENT_5 = new Student();
+    public static Student    STUDENT_6 = new Student();
 
     public static JSONObject OBJECT = new JSONObject();
 
@@ -45,5 +53,18 @@ public class ConstantStudentTest {
     public static List<Student> STUDENTS_AGE_BETWEEN = Arrays.asList(
             STUDENT_3,
             STUDENT_4
+    );
+
+    public static List<Student> LAST_FIVE_STUDENTS = Arrays.asList(
+            STUDENT_2,
+            STUDENT_3,
+            STUDENT_4,
+            STUDENT_5,
+            STUDENT_6
+    );
+
+    public static List<Student> PAGINATION_STUDENTS = Arrays.asList(
+            STUDENT_1,
+            STUDENT_2
     );
 }

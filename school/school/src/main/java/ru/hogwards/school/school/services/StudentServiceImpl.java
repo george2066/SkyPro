@@ -1,5 +1,6 @@
 package ru.hogwards.school.school.services;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwards.school.school.exceptions.NotFoundStudentException;
 import ru.hogwards.school.school.exceptions.HogwardsConstantException;
@@ -8,9 +9,8 @@ import ru.hogwards.school.school.models.Faculty;
 import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.StudentRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -35,8 +35,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Collection<Student> getAll() {
-        return repository.findAll();
+    public Collection<Student> getAll(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return repository.findAll(pageRequest).getContent();
     }
 
     @Override
@@ -69,5 +70,20 @@ public class StudentServiceImpl implements StudentService {
         }
         Student student = get(id);
         return student.getFaculty();
+    }
+
+    @Override
+    public Integer getAmountStudents() {
+        return repository.findAll().size();
+    }
+
+    @Override
+    public OptionalDouble getAvgAgeStudents() {
+        return repository.findAll().stream().mapToInt(Student::getAge).average();
+    }
+
+    @Override
+    public Collection<Student> getFiveLastStudent() {
+        return repository.getFiveLastStudent();
     }
 }

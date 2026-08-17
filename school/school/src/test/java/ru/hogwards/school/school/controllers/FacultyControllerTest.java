@@ -203,16 +203,6 @@ public class FacultyControllerTest {
     }
 
     @Test
-    void getByNameNegativeTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/faculties/getByColorOrName")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(""));
-
-        verify(service, never()).getByColorOrName(any(), anyString());
-    }
-
-    @Test
     void getByColor() throws Exception {
         when(service.getByColorOrName(ConstantFacultyTest.COLOR_1, null)).thenReturn(ConstantFacultyTest.FACULTY_1);
 
@@ -222,5 +212,15 @@ public class FacultyControllerTest {
                 .andExpect(status().isOk());
 
         verify(service, times(1)).getByColorOrName(ConstantFacultyTest.COLOR_1, null);
+    }
+
+    @Test
+    void getByNameNegativeTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculties/getByColorOrName")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        verify(service, never()).getByColorOrName(any(), anyString());
     }
 }

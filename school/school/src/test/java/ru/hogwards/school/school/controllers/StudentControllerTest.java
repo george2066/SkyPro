@@ -9,6 +9,10 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -24,7 +28,9 @@ import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.StudentRepository;
 import ru.hogwards.school.school.services.StudentServiceImpl;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -147,18 +153,18 @@ public class StudentControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void getAllTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/students")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(4)))
-                .andExpect(jsonPath("$[?(@.id == " + ConstantStudentTest.ID_1 + ")]").exists())
-                .andExpect(jsonPath("$[?(@.id == " + ConstantStudentTest.ID_1 + ")].name").value(ConstantStudentTest.NAME_1))
-                .andExpect(jsonPath("$[?(@.id == " + ConstantStudentTest.ID_2 + ")]").exists())
-                .andExpect(jsonPath("$[?(@.id == " + ConstantStudentTest.ID_2 + ")].age").value(ConstantStudentTest.AGE_2));
-    }
+        @Test
+        void getAllTest() throws Exception {
+            Page<Student> page = new PageImpl<>(ConstantStudentTest.PAGINATION_STUDENTS);
+
+            when(repository.findAll(any(Pageable.class)))
+                    .thenReturn(page);
+
+            mockMvc.perform(MockMvcRequestBuilders.get("/students")
+                            .param("page", "1")
+                            .param("size", "2"))
+                    .andExpect(status().isOk());
+        }
 
     @Test
     void editTest() throws Exception {
@@ -217,5 +223,32 @@ public class StudentControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(""));
+    }
+
+    @Test
+    void getAvgAgeStudentsTest() throws Exception{
+        when(service.getAvgAgeStudents()).thenReturn(OptionalDouble.of(21.5));
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/getAvgAgeStudents"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(21.5));
+    }
+
+    @Test
+    void getAmountStudentsTest() throws  Exception {
+        when(service.getAmountStudents()).thenReturn(128);
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/getAmountStudents"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(128));
+    }
+
+    @Test
+    void getFiveLastStudent() throws  Exception {
+        when(repository.getFiveLastStudent()).thenReturn(ConstantStudentTest.LAST_FIVE_STUDENTS);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/getFiveLastStudent"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

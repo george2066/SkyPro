@@ -9,6 +9,7 @@ import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.services.StudentServiceImpl;
 
 import java.util.Collection;
+import java.util.OptionalDouble;
 
 @RestController
 @RequestMapping("students")
@@ -20,8 +21,11 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<Collection<Student>> getAll(
+            @RequestParam("page") Integer pageNumber,
+            @RequestParam("size") Integer pageSize
+    ) {
+        return ResponseEntity.ok(service.getAll(pageNumber, pageSize));
     }
 
     @GetMapping("{id}")
@@ -71,5 +75,20 @@ public class StudentController {
         } catch (NotFoundStudentException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("getFiveLastStudent")
+    ResponseEntity<Collection<Student>> getFiveLastStudent() {
+        return ResponseEntity.ok(service.getFiveLastStudent());
+    }
+
+    @GetMapping("getAvgAgeStudents")
+    public ResponseEntity<OptionalDouble> getAvgAgeStudents() {
+        return ResponseEntity.ok(service.getAvgAgeStudents());
+    }
+
+    @GetMapping("getAmountStudents")
+    public ResponseEntity<Integer> getAmountStudents() {
+        return ResponseEntity.ok(service.getAmountStudents());
     }
 }
