@@ -3,3 +3,13 @@
 Обратите внимание на файл application.properties.
 Вместо spring.jpa.hibernate.ddl пишите spring.jpa.hibernate.ddl-auto.
 Не делайте это по конспекту!
+
+Чтобы запустить определённый профиль
+mvn clean install --пересобери проект
+java -jar .\target\school-0.0.1-SNAPSHOT.jar --spring.profiles.active=test -- запусти приложение с этим профилем
+
+Если у вас стоит интеллидж идея, то добавьте в системные переменные через панель управления
+C:\Program Files\JetBrains\IntelliJ IDEA 2026.1.1\jbr\bin
+и
+C:\Program Files\apache-maven-3.9.16-bin\apache-maven-3.9.16\bin
+только перед вторым нужно скачать апач мавен
