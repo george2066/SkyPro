@@ -13,6 +13,8 @@ import ru.hogwards.school.school.repositories.StudentRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -103,5 +105,13 @@ public class StudentServiceImpl implements StudentService {
     public Collection<Student> getFiveLastStudent() {
         logger.info("Was invoked method for get five last students");
         return repository.getFiveLastStudent();
+    }
+
+    @Override
+    public Collection<Student> getAllStudentWithNameStartWithA() {
+        logger.info("Was invoked method for get all students c name start with A");
+        return repository.findAll().stream().parallel()
+                .filter(student -> student.getName().startsWith("A"))
+                .toList();
     }
 }

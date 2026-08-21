@@ -80,4 +80,9 @@ public class FacultyController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("getFacultyLongestName")
+    public ResponseEntity<Collection<Faculty>> getFacultyLongestName() {
+        return ResponseEntity.ok(service.getFacultyLongestName());
+    }
 }

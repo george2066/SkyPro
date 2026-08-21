@@ -76,6 +76,26 @@ public class StudentControllerTest {
         ConstantStudentTest.STUDENT_4.setAge(ConstantStudentTest.AGE_4);
         ConstantStudentTest.STUDENT_4.setId(ConstantStudentTest.ID_4);
 
+        ConstantStudentTest.STUDENT_5.setName(ConstantStudentTest.NAME_5);
+        ConstantStudentTest.STUDENT_5.setAge(ConstantStudentTest.AGE_5);
+        ConstantStudentTest.STUDENT_5.setId(ConstantStudentTest.ID_5);
+
+        ConstantStudentTest.STUDENT_6.setName(ConstantStudentTest.NAME_6);
+        ConstantStudentTest.STUDENT_6.setAge(ConstantStudentTest.AGE_6);
+        ConstantStudentTest.STUDENT_6.setId(ConstantStudentTest.ID_6);
+
+        ConstantStudentTest.STUDENT_START_A_7.setName(ConstantStudentTest.NAME_START_A_7);
+        ConstantStudentTest.STUDENT_START_A_7.setAge  (ConstantStudentTest.AGE_START_A_7);
+        ConstantStudentTest.STUDENT_START_A_7.setId    (ConstantStudentTest.ID_START_A_7);
+
+        ConstantStudentTest.STUDENT_START_A_8.setName(ConstantStudentTest.NAME_START_A_8);
+        ConstantStudentTest.STUDENT_START_A_8.setAge  (ConstantStudentTest.AGE_START_A_8);
+        ConstantStudentTest.STUDENT_START_A_8.setId    (ConstantStudentTest.ID_START_A_8);
+
+        ConstantStudentTest.STUDENT_START_A_9.setName(ConstantStudentTest.NAME_START_A_9);
+        ConstantStudentTest.STUDENT_START_A_9.setAge  (ConstantStudentTest.AGE_START_A_9);
+        ConstantStudentTest.STUDENT_START_A_9.setId    (ConstantStudentTest.ID_START_A_9);
+
         when(repository.save(any(Student.class))).thenReturn(ConstantStudentTest.STUDENT_1);
         when(repository.findById(any(Long.class))).thenReturn(Optional.ofNullable(ConstantStudentTest.STUDENT_1));
         when(repository.findAll()).thenReturn(ConstantStudentTest.ALL_STUDENTS);
@@ -250,5 +270,12 @@ public class StudentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/students/getFiveLastStudent"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void getAllStudentWithNameStartWithATest() throws  Exception {
+        when(repository.findAll()).thenReturn(ConstantStudentTest.ALL_STUDENTS);
+        mockMvc.perform(MockMvcRequestBuilders.get("/students/getAllStudentWithNameStartWithA"))
+                .andExpect(status().isOk());
     }
 }

@@ -17,4 +17,5 @@ public interface StudentService {
     Integer getAmountStudents();
     OptionalDouble getAvgAgeStudents();
     Collection<Student> getFiveLastStudent();
+    Collection<Student> getAllStudentWithNameStartWithA();
 }

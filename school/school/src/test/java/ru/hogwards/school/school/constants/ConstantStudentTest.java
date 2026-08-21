@@ -15,6 +15,9 @@ public class ConstantStudentTest {
     public static Long       ID_4 = 4L;
     public static Long       ID_5 = 5L;
     public static Long       ID_6 = 6L;
+    public static Long       ID_START_A_7 = 7L;
+    public static Long       ID_START_A_8 = 8L;
+    public static Long       ID_START_A_9 = 9L;
 
     public static String     NAME_1 = "name1";
     public static String     NAME_2 = "name2";
@@ -22,6 +25,9 @@ public class ConstantStudentTest {
     public static String     NAME_4 = "name4";
     public static String     NAME_5 = "name5";
     public static String     NAME_6 = "name6";
+    public static String     NAME_START_A_7 = "A_name7";
+    public static String     NAME_START_A_8 = "A_name8";
+    public static String     NAME_START_A_9 = "A_name9";
 
     public static Integer    AGE_1 = 21;
     public static Integer    AGE_2 = 22;
@@ -29,6 +35,9 @@ public class ConstantStudentTest {
     public static Integer    AGE_4 = 44;
     public static Integer    AGE_5 = 55;
     public static Integer    AGE_6 = 66;
+    public static Integer    AGE_START_A_7 = 77;
+    public static Integer    AGE_START_A_8 = 88;
+    public static Integer    AGE_START_A_9 = 99;
 
     public static String COLOR = "color";
 
@@ -38,6 +47,9 @@ public class ConstantStudentTest {
     public static Student    STUDENT_4 = new Student();
     public static Student    STUDENT_5 = new Student();
     public static Student    STUDENT_6 = new Student();
+    public static Student    STUDENT_START_A_7 = new Student();
+    public static Student    STUDENT_START_A_8 = new Student();
+    public static Student    STUDENT_START_A_9 = new Student();
 
     public static JSONObject OBJECT = new JSONObject();
 
@@ -66,5 +78,11 @@ public class ConstantStudentTest {
     public static List<Student> PAGINATION_STUDENTS = Arrays.asList(
             STUDENT_1,
             STUDENT_2
+    );
+
+    public static List<Student> STUDENTS_START_A = Arrays.asList(
+            STUDENT_START_A_7,
+            STUDENT_START_A_8,
+            STUDENT_START_A_9
     );
 }

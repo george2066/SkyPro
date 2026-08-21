@@ -11,9 +11,8 @@ import ru.hogwards.school.school.models.Faculty;
 import ru.hogwards.school.school.models.Student;
 import ru.hogwards.school.school.repositories.FacultyRepository;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import javax.swing.text.html.Option;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,5 +95,15 @@ public class FacultyServiceImpl implements FacultyService {
         Faculty faculty = get(id);
         logger.info("Was invoked method for get students faculty");
         return faculty.getStudents();
+    }
+
+    @Override
+    public Collection<Faculty> getFacultyLongestName() {
+        Integer lengthLongestName = repository.findAll().stream().parallel()
+                .map(faculty -> faculty.getName().length())
+                .max(Comparator.naturalOrder()).orElse(0);
+        return repository.findAll().stream().parallel()
+                .filter(faculty -> (faculty.getName().length() == lengthLongestName))
+                .toList();
     }
 }

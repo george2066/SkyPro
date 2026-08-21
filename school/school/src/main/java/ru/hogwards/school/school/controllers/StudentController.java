@@ -91,4 +91,9 @@ public class StudentController {
     public ResponseEntity<Integer> getAmountStudents() {
         return ResponseEntity.ok(service.getAmountStudents());
     }
+
+    @GetMapping("getAllStudentWithNameStartWithA")
+    public ResponseEntity<Collection<Student>> getAllStudentWithNameStartWithA() {
+        return ResponseEntity.ok(service.getAllStudentWithNameStartWithA());
+    }
 }

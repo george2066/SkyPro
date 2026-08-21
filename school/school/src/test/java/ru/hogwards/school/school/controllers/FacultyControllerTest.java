@@ -70,6 +70,10 @@ public class FacultyControllerTest {
         ConstantFacultyTest.FACULTY_4.setName(ConstantFacultyTest.NAME_4);
         ConstantFacultyTest.FACULTY_4.setColor(ConstantFacultyTest.COLOR_4);
 
+        ConstantFacultyTest.FACULTY_LONGEST_NAME.setId(ConstantFacultyTest.ID_LONGEST_NAME);
+        ConstantFacultyTest.FACULTY_LONGEST_NAME.setName(ConstantFacultyTest.LONGEST_NAME);
+        ConstantFacultyTest.FACULTY_LONGEST_NAME.setColor(ConstantFacultyTest.COLOR_LONGEST_NAME);
+
         ConstantStudentTest.STUDENT_1.setFaculty(ConstantFacultyTest.FACULTY_1);
         ConstantStudentTest.STUDENT_2.setFaculty(ConstantFacultyTest.FACULTY_1);
         ConstantStudentTest.STUDENT_3.setFaculty(ConstantFacultyTest.FACULTY_1);
@@ -222,5 +226,16 @@ public class FacultyControllerTest {
                 .andExpect(content().string(""));
 
         verify(service, never()).getByColorOrName(any(), anyString());
+    }
+
+    @Test
+    void getFacultyLongestNameTest() throws  Exception {
+        when(service.getFacultyLongestName()).thenReturn(ConstantFacultyTest.FACULTIES_LONGEST_NAME);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/faculties/getFacultyLongestName")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(service, times(1)).getFacultyLongestName();
     }
 }
